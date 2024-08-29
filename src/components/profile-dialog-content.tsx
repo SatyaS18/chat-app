@@ -1,3 +1,4 @@
+import { z } from "zod";
 import { useTheme } from "next-themes";
 import { Card, CardTitle } from "./ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
@@ -13,6 +14,10 @@ const statuses = [
   "👨🏼‍💻 Coding",
   "📴 Taking a break",
 ];
+
+const addFriendFormSchema = z.object({
+  email: z.string().min(1, { message: "Email is required" }).email(),
+});
 
 const ProfileDialogContent = () => {
   const { setTheme } = useTheme();

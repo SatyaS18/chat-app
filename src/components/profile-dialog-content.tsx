@@ -2,7 +2,7 @@ import { z } from "zod";
 import { useTheme } from "next-themes";
 import { Card, CardTitle } from "./ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { Handshake, UserRound, UserRoundSearch } from "lucide-react";
+import { Handshake, Pencil, UserRound, UserRoundSearch } from "lucide-react";
 import { Input } from "./ui/input";
 import { Separator } from "./ui/separator";
 import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
@@ -18,6 +18,8 @@ import {
   FormMessage,
 } from "./ui/form";
 import { Button } from "./ui/button";
+import { useState } from "react";
+import { Textarea } from "./ui/textarea";
 
 const statuses = [
   "👋 Speak Freely",
@@ -32,6 +34,8 @@ const addFriendFormSchema = z.object({
 });
 
 const ProfileDialogContent = () => {
+  const [updateStatusDialog, setUpdateStatusDialog] = useState(false);
+  const [status, setStatus] = useState("");
   const { setTheme } = useTheme();
 
   const form = useForm<z.infer<typeof addFriendFormSchema>>({
@@ -136,6 +140,49 @@ const ProfileDialogContent = () => {
             </p>
           </DialogContent>
         </Dialog>
+
+        <Separator />
+
+        <Dialog
+          open={updateStatusDialog}
+          onOpenChange={() => setUpdateStatusDialog(!updateStatusDialog)}
+        >
+          <DialogTrigger>
+            <div className="flex items-center space-x-2">
+              <Pencil />
+              <p>{"Display current status"}</p>
+            </div>
+          </DialogTrigger>
+          <DialogContent>
+            <Textarea
+              placeholder="Display current status"
+              className="resize-none h-48"
+              value={status}
+              onChange={(e) => setStatus(e.target.value)}
+              disabled={false}
+            />
+            <div>
+              {statuses.map((status) => (
+                <p
+                  key={status}
+                  className="px-2 py-3 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md cursor-pointer"
+                  onClick={() => setStatus(status)}
+                >
+                  {status}
+                </p>
+              ))}
+            </div>
+            <Button
+              disabled
+              type="button"
+              className="ml-auto w-fit bg-primary-main"
+            >
+              Update status
+            </Button>
+          </DialogContent>
+        </Dialog>
+
+        <Separator />
       </div>
     </div>
   );

@@ -6,6 +6,18 @@ import { UserRound, UserRoundSearch } from "lucide-react";
 import { Input } from "./ui/input";
 import { Separator } from "./ui/separator";
 import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "./ui/form";
+import { Button } from "./ui/button";
 
 const statuses = [
   "👋 Speak Freely",
@@ -21,6 +33,18 @@ const addFriendFormSchema = z.object({
 
 const ProfileDialogContent = () => {
   const { setTheme } = useTheme();
+
+  const form = useForm<z.infer<typeof addFriendFormSchema>>({
+    resolver: zodResolver(addFriendFormSchema),
+    defaultValues: {
+      email: "",
+    },
+  });
+
+  async function onSubmit({ email }: z.infer<typeof addFriendFormSchema>) {
+    console.log(email);
+  }
+
   return (
     <div>
       <Card className="border-0 flex flex-col space-y-4">
@@ -61,8 +85,42 @@ const ProfileDialogContent = () => {
               <p>Send friend request</p>
             </div>
           </DialogTrigger>
-          <DialogContent></DialogContent>
+          <DialogContent>
+            <Form {...form}>
+              <form
+                className="space-y-8"
+                onSubmit={form.handleSubmit(onSubmit)}
+              >
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email</FormLabel>
+                      <FormControl>
+                        <Input
+                          disabled={true}
+                          placeholder="friend@email.com"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormDescription>
+                        Enter your friend&apos;s email to send a friend request
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <Button disabled={true} type="submit">
+                  Submit
+                </Button>
+              </form>
+            </Form>
+          </DialogContent>
         </Dialog>
+
+        <Separator />
       </div>
     </div>
   );

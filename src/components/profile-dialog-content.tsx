@@ -2,7 +2,7 @@ import { z } from "zod";
 import { useTheme } from "next-themes";
 import { Card, CardTitle } from "./ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { UserRound, UserRoundSearch } from "lucide-react";
+import { Handshake, UserRound, UserRoundSearch } from "lucide-react";
 import { Input } from "./ui/input";
 import { Separator } from "./ui/separator";
 import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
@@ -121,6 +121,21 @@ const ProfileDialogContent = () => {
         </Dialog>
 
         <Separator />
+
+        <Dialog>
+          <DialogTrigger>
+            <div className="flex items-center space-x-2">
+              <Handshake />
+              <p>View friend requests</p>
+            </div>
+          </DialogTrigger>
+
+          <DialogContent>
+            <p className="text-xl text-center font-bold">
+              No friend request yet
+            </p>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );

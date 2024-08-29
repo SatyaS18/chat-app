@@ -1,8 +1,10 @@
 import { useTheme } from "next-themes";
 import { Card, CardTitle } from "./ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { UserRound } from "lucide-react";
+import { UserRound, UserRoundSearch } from "lucide-react";
 import { Input } from "./ui/input";
+import { Separator } from "./ui/separator";
+import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
 
 const statuses = [
   "👋 Speak Freely",
@@ -37,6 +39,25 @@ const ProfileDialogContent = () => {
             value="Satyakant Sahu"
           />
         </div>
+
+        <Separator />
+
+        <div className="flex items-center justify-center space-x-5">
+          <p>Manage your account</p>
+          <button>USER BUTTON</button>
+        </div>
+
+        <Separator />
+
+        <Dialog>
+          <DialogTrigger>
+            <div className="flex items-center space-x-2">
+              <UserRoundSearch />
+              <p>Send friend request</p>
+            </div>
+          </DialogTrigger>
+          <DialogContent></DialogContent>
+        </Dialog>
       </div>
     </div>
   );

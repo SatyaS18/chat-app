@@ -2,7 +2,15 @@ import { z } from "zod";
 import { useTheme } from "next-themes";
 import { Card, CardTitle } from "./ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { Handshake, Pencil, UserRound, UserRoundSearch } from "lucide-react";
+import {
+  Handshake,
+  LaptopMinimal,
+  Pencil,
+  Sun,
+  SunMoon,
+  UserRound,
+  UserRoundSearch,
+} from "lucide-react";
 import { Input } from "./ui/input";
 import { Separator } from "./ui/separator";
 import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
@@ -20,6 +28,7 @@ import {
 import { Button } from "./ui/button";
 import { useState } from "react";
 import { Textarea } from "./ui/textarea";
+import { ToggleGroup, ToggleGroupItem } from "./ui/toggle-group";
 
 const statuses = [
   "👋 Speak Freely",
@@ -183,6 +192,33 @@ const ProfileDialogContent = () => {
         </Dialog>
 
         <Separator />
+
+        <ToggleGroup type="single" variant="outline">
+          <ToggleGroupItem
+            onClick={() => setTheme("light")}
+            value="light"
+            className="flex space-x-3"
+          >
+            <Sun />
+            <p>Light</p>
+          </ToggleGroupItem>
+          <ToggleGroupItem
+            onClick={() => setTheme("dark")}
+            value="dark"
+            className="flex space-x-3"
+          >
+            <SunMoon />
+            <p>Dark</p>
+          </ToggleGroupItem>
+          <ToggleGroupItem
+            onClick={() => setTheme("system")}
+            value="system"
+            className="flex space-x-3"
+          >
+            <LaptopMinimal />
+            <p>System</p>
+          </ToggleGroupItem>
+        </ToggleGroup>
       </div>
     </div>
   );

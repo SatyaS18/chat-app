@@ -32,6 +32,9 @@ import { ToggleGroup, ToggleGroupItem } from "./ui/toggle-group";
 import { api } from "../../convex/_generated/api";
 import { useQuery } from "convex/react";
 import { UserButton, useUser } from "@clerk/clerk-react";
+import { useMutationHandler } from "@/hooks/use-mutation-handler";
+import { toast } from "sonner";
+import { ConvexError } from "convex/values";
 
 const statuses = [
   "👋 Speak Freely",
@@ -52,6 +55,9 @@ const ProfileDialogContent = () => {
 
   const { user } = useUser();
   const userDetails = useQuery(api.status.get, { clerkId: user?.id! });
+  const { mutate: updateStatus, state: updateStatusState } = useMutationHandler(
+    api.status.update
+  );
 
   const form = useForm<z.infer<typeof addFriendFormSchema>>({
     resolver: zodResolver(addFriendFormSchema),
@@ -62,6 +68,20 @@ const ProfileDialogContent = () => {
 
   async function onSubmit({ email }: z.infer<typeof addFriendFormSchema>) {
     console.log(email);
+  }
+
+  async function updateStatusHandler() {
+    try {
+      await updateStatus({ clerkId: user?.id!, status });
+      toast.success("Status updated successfully");
+      setStatus("");
+      setUpdateStatusDialog(false);
+    } catch (error) {
+      toast.error(
+        error instanceof ConvexError ? error.data : "An error occurred"
+      );
+      console.log("Error updating status", error);
+    }
   }
 
   return (
@@ -182,7 +202,7 @@ const ProfileDialogContent = () => {
               className="resize-none h-48"
               value={status}
               onChange={(e) => setStatus(e.target.value)}
-              disabled={false}
+              disabled={updateStatusState === "loading"}
             />
             <div>
               {statuses.map((status) => (
@@ -196,9 +216,10 @@ const ProfileDialogContent = () => {
               ))}
             </div>
             <Button
-              disabled
+              disabled={updateStatusState === "loading"}
               type="button"
               className="ml-auto w-fit bg-primary-main"
+              onClick={updateStatusHandler}
             >
               Update status
             </Button>

@@ -29,6 +29,9 @@ import { Button } from "./ui/button";
 import { useState } from "react";
 import { Textarea } from "./ui/textarea";
 import { ToggleGroup, ToggleGroupItem } from "./ui/toggle-group";
+import { api } from "../../convex/_generated/api";
+import { useQuery } from "convex/react";
+import { UserButton, useUser } from "@clerk/clerk-react";
 
 const statuses = [
   "👋 Speak Freely",
@@ -46,6 +49,9 @@ const ProfileDialogContent = () => {
   const [updateStatusDialog, setUpdateStatusDialog] = useState(false);
   const [status, setStatus] = useState("");
   const { setTheme } = useTheme();
+
+  const { user } = useUser();
+  const userDetails = useQuery(api.status.get, { clerkId: user?.id! });
 
   const form = useForm<z.infer<typeof addFriendFormSchema>>({
     resolver: zodResolver(addFriendFormSchema),
@@ -65,8 +71,8 @@ const ProfileDialogContent = () => {
 
         <div>
           <Avatar className="h-20 w-20 mx-auto">
-            <AvatarImage src="https://github.com/shadcn.png" />
-            <AvatarFallback>User</AvatarFallback>
+            <AvatarImage src={userDetails?.imageUrl} />
+            <AvatarFallback>{userDetails?.username[0]}</AvatarFallback>
           </Avatar>
         </div>
       </Card>
@@ -78,7 +84,7 @@ const ProfileDialogContent = () => {
             disabled
             placeholder="Name"
             className="border-none outline-none ring-0"
-            value="Satyakant Sahu"
+            value={userDetails?.username}
           />
         </div>
 
@@ -86,7 +92,15 @@ const ProfileDialogContent = () => {
 
         <div className="flex items-center justify-center space-x-5">
           <p>Manage your account</p>
-          <button>USER BUTTON</button>
+          <UserButton
+            appearance={{
+              elements: {
+                userButtonPopoverCard: {
+                  pointerEvents: "initial",
+                },
+              },
+            }}
+          />
         </div>
 
         <Separator />
@@ -159,12 +173,12 @@ const ProfileDialogContent = () => {
           <DialogTrigger>
             <div className="flex items-center space-x-2">
               <Pencil />
-              <p>{"Display current status"}</p>
+              <p>{userDetails?.status}</p>
             </div>
           </DialogTrigger>
           <DialogContent>
             <Textarea
-              placeholder="Display current status"
+              placeholder={userDetails?.status}
               className="resize-none h-48"
               value={status}
               onChange={(e) => setStatus(e.target.value)}

@@ -1,5 +1,9 @@
 import { FC } from "react";
 import { Id } from "../../convex/_generated/dataModel";
+import { useMutationHandler } from "@/hooks/use-mutation-handler";
+import { api } from "../../convex/_generated/api";
+import { toast } from "sonner";
+import { ConvexError } from "convex/values";
 
 type FriendRequestCardProps = {
   id: Id<"friend_requests">;
@@ -14,6 +18,34 @@ const FriendRequestCard: FC<FriendRequestCardProps> = ({
   imageUrl,
   username,
 }) => {
+  const { mutate: acceptRequest, state: acceptRequestState } =
+    useMutationHandler(api.friend_request.accept);
+  const { mutate: declineRequest, state: declineRequestState } =
+    useMutationHandler(api.friend_request.decline);
+
+  const handleDenyRequest = async (id: string) => {
+    try {
+      await declineRequest({ id });
+      toast.success("Friend request declined");
+    } catch (error) {
+      console.log("Error declining friend request:", error);
+      toast.error(
+        error instanceof ConvexError ? error.data : "An error occurred"
+      );
+    }
+  };
+
+  const handleAcceptRequest = async (id: string) => {
+    try {
+      await acceptRequest({ id });
+      toast.success("Friend request accepted");
+    } catch (error) {
+      console.log("Error accepting friend request:", error);
+      toast.error(
+        error instanceof ConvexError ? error.data : "An error occurred"
+      );
+    }
+  };
   return <div className="">FriendRequestCard</div>;
 };
 

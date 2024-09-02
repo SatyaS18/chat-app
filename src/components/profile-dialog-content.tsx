@@ -145,7 +145,10 @@ const ProfileDialogContent = () => {
 
         <Separator />
 
-        <Dialog>
+        <Dialog
+          open={friendReqestModal}
+          onOpenChange={() => setFriendRequestModal(!friendReqestModal)}
+        >
           <DialogTrigger>
             <div className="flex items-center space-x-2">
               <UserRoundSearch />

@@ -35,6 +35,7 @@ import { UserButton, useUser } from "@clerk/clerk-react";
 import { useMutationHandler } from "@/hooks/use-mutation-handler";
 import { toast } from "sonner";
 import { ConvexError } from "convex/values";
+import { Badge } from "./ui/badge";
 
 const statuses = [
   "👋 Speak Freely",
@@ -61,6 +62,7 @@ const ProfileDialogContent = () => {
   );
   const { mutate: createFriendRequest, state: createFriendRequestState } =
     useMutationHandler(api.friend_request.create);
+  const friendRequests = useQuery(api.friend_requests.get);
 
   const form = useForm<z.infer<typeof addFriendFormSchema>>({
     resolver: zodResolver(addFriendFormSchema),
@@ -189,6 +191,9 @@ const ProfileDialogContent = () => {
             <div className="flex items-center space-x-2">
               <Handshake />
               <p>View friend requests</p>
+              {friendRequests && friendRequests.length > 0 && (
+                <Badge variant="outline">{friendRequests.length}</Badge>
+              )}
             </div>
           </DialogTrigger>
 

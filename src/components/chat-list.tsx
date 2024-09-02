@@ -16,6 +16,10 @@ const ChatList: FC = () => {
   const directMessages = conversations?.filter(
     (msg) => !msg.conversation.isGroup
   );
+
+  const hasConversations =
+    (groupMessages && groupMessages.length > 0) ||
+    (directMessages && directMessages.length > 0);
   return <div className="">ChatList</div>;
 };
 

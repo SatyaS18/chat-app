@@ -5,6 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import {
   Handshake,
   LaptopMinimal,
+  Loader2,
   Pencil,
   Sun,
   SunMoon,
@@ -36,6 +37,8 @@ import { useMutationHandler } from "@/hooks/use-mutation-handler";
 import { toast } from "sonner";
 import { ConvexError } from "convex/values";
 import { Badge } from "./ui/badge";
+import { ScrollArea } from "./ui/scroll-area";
+import FriendRequestCard from "./friend-request-card";
 
 const statuses = [
   "👋 Speak Freely",
@@ -198,9 +201,27 @@ const ProfileDialogContent = () => {
           </DialogTrigger>
 
           <DialogContent>
-            <p className="text-xl text-center font-bold">
-              No friend request yet
-            </p>
+            {friendRequests ? (
+              friendRequests.length === 0 ? (
+                <p className="text-xl text-center font-bold">
+                  No friend request yet
+                </p>
+              ) : (
+                <ScrollArea className="h-[400px] rounded-md">
+                  {friendRequests.map((request) => (
+                    <FriendRequestCard
+                      key={request.sender._id}
+                      email={request.sender.email}
+                      id={request._id}
+                      imageUrl={request.sender.imageUrl}
+                      username={request.sender.username}
+                    />
+                  ))}
+                </ScrollArea>
+              )
+            ) : (
+              <Loader2 />
+            )}
           </DialogContent>
         </Dialog>
 

@@ -2,14 +2,14 @@
 // import { ChatList } from "@/components/chat-list";
 // import { NewGroup } from "@/components/new-group";
 
+import { SidebarContainer } from "./sidebar-container";
+
 const ChatSidebar = () => {
   return (
     <>
-      {/* <SidebarContainer title="Chats" trigger={<NewGroup />}>
-         <ChatList />
-        
-      </SidebarContainer> */}
-      chat
+      <SidebarContainer title="Chats" trigger={<></>}>
+        <div>Chat Sidebar</div>
+      </SidebarContainer>
     </>
   );
 };

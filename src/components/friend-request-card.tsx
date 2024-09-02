@@ -4,6 +4,10 @@ import { useMutationHandler } from "@/hooks/use-mutation-handler";
 import { api } from "../../convex/_generated/api";
 import { toast } from "sonner";
 import { ConvexError } from "convex/values";
+import { Handshake, X } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { Switch } from "./ui/switch";
+import { Button } from "./ui/button";
 
 type FriendRequestCardProps = {
   id: Id<"friend_requests">;
@@ -46,7 +50,43 @@ const FriendRequestCard: FC<FriendRequestCardProps> = ({
       );
     }
   };
-  return <div className="">FriendRequestCard</div>;
+  return (
+    <div className="flex items-center justify-between space-x-4 rounded-md border p-4">
+      <div className="flex items-center space-x-3">
+        <Handshake />
+        <Avatar>
+          <AvatarImage src={imageUrl} />
+          <AvatarFallback>{username.slice(0, 1)}</AvatarFallback>
+        </Avatar>
+        <div className="flex justify-between items-center">
+          <div className="flex-1 space-y-1">
+            <p className="text-sm font-medium leading-none">{username}</p>
+            <p className="text-sm text-muted-foreground">{email}</p>
+          </div>
+        </div>
+      </div>
+      <div className="flex items-center gap-x-5">
+        <Switch
+          disabled={
+            acceptRequestState === "loading" ||
+            declineRequestState === "loading"
+          }
+          onCheckedChange={(_) => handleAcceptRequest(id)}
+        />
+        <Button
+          size="icon"
+          variant="destructive"
+          disabled={
+            acceptRequestState === "loading" ||
+            declineRequestState === "loading"
+          }
+          onClick={(_) => handleDenyRequest(id)}
+        >
+          <X />
+        </Button>
+      </div>
+    </div>
+  );
 };
 
 export default FriendRequestCard;

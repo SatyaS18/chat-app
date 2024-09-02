@@ -51,6 +51,7 @@ const addFriendFormSchema = z.object({
 const ProfileDialogContent = () => {
   const [updateStatusDialog, setUpdateStatusDialog] = useState(false);
   const [status, setStatus] = useState("");
+  const [friendReqestModal, setFriendRequestModal] = useState(false);
   const { setTheme } = useTheme();
 
   const { user } = useUser();
@@ -58,6 +59,8 @@ const ProfileDialogContent = () => {
   const { mutate: updateStatus, state: updateStatusState } = useMutationHandler(
     api.status.update
   );
+  const { mutate: createFriendRequest, state: createFriendRequestState } =
+    useMutationHandler(api.friend_request.create);
 
   const form = useForm<z.infer<typeof addFriendFormSchema>>({
     resolver: zodResolver(addFriendFormSchema),
@@ -66,8 +69,20 @@ const ProfileDialogContent = () => {
     },
   });
 
-  async function onSubmit({ email }: z.infer<typeof addFriendFormSchema>) {
-    console.log(email);
+  async function friendRequestHandler({
+    email,
+  }: z.infer<typeof addFriendFormSchema>) {
+    try {
+      await createFriendRequest({ email });
+      form.reset();
+      toast.success("Friend request sent successfully");
+      setFriendRequestModal(false);
+    } catch (error) {
+      toast.error(
+        error instanceof ConvexError ? error.data : "An error occurred"
+      );
+      console.log("Error sending friend request:", error);
+    }
   }
 
   async function updateStatusHandler() {
@@ -136,7 +151,7 @@ const ProfileDialogContent = () => {
             <Form {...form}>
               <form
                 className="space-y-8"
-                onSubmit={form.handleSubmit(onSubmit)}
+                onSubmit={form.handleSubmit(friendRequestHandler)}
               >
                 <FormField
                   control={form.control}

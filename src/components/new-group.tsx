@@ -19,6 +19,16 @@ import {
   FormMessage,
 } from "./ui/form";
 import { Input } from "./ui/input";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+} from "./ui/dropdown-menu";
+import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
+import { Button } from "./ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 const CreateGroupSchema = z.object({
   name: z.string().min(2, {
@@ -99,6 +109,56 @@ const NewGroup = () => {
                         This is the name of the group
                       </FormDescription>
                       <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="members"
+                  render={(_) => (
+                    <FormItem>
+                      <FormLabel>Contacts</FormLabel>
+                      <FormControl>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger
+                            asChild
+                            disabled={unselectedContacts.length === 0}
+                          >
+                            <Button className="ml-4" variant="outline">
+                              Select contacts
+                            </Button>
+                          </DropdownMenuTrigger>
+
+                          <DropdownMenuContent className="w-full">
+                            <DropdownMenuLabel>Contacts</DropdownMenuLabel>
+                            <DropdownMenuSeparator />
+
+                            {unselectedContacts.map((contact) => (
+                              <DropdownMenuCheckboxItem
+                                key={contact._id}
+                                className="flex items-center gap-2 w-full p-2"
+                                onCheckedChange={(checked) => {
+                                  if (checked) {
+                                    form.setValue("members", [
+                                      ...members,
+                                      contact._id,
+                                    ]);
+                                  }
+                                }}
+                              >
+                                <Avatar className="h-8 w-8">
+                                  <AvatarImage src={contact.imageUrl} />
+                                  <AvatarFallback>
+                                    {contact.username.slice(0, 2)}
+                                  </AvatarFallback>
+                                </Avatar>
+                                <h4 className="truncate">{contact.username}</h4>
+                              </DropdownMenuCheckboxItem>
+                            ))}
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </FormControl>
                     </FormItem>
                   )}
                 />

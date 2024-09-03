@@ -2,6 +2,7 @@
 import NewGroup from "@/components/new-group";
 import { NavigationBar } from "./../../components/navigation-bar";
 import { FaSignalMessenger } from "react-icons/fa6";
+import { MobileChatContent } from "@/components/mobile-chat-content";
 
 const ChatPage = () => {
   return (
@@ -14,7 +15,9 @@ const ChatPage = () => {
           get started.
         </p>
       </div>
-      <div className="md:hidden flex flex-col space-y-2"></div>
+      <div className="md:hidden flex flex-col space-y-2">
+        <MobileChatContent />
+      </div>
     </>
   );
 };

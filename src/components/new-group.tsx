@@ -7,7 +7,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { toast } from "sonner";
 import { ConvexError } from "convex/values";
-import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogTrigger,
+} from "./ui/dialog";
 import { Users, X } from "lucide-react";
 import {
   Form,
@@ -194,6 +199,11 @@ const NewGroup = () => {
                     ))}
                 </Card>
               ) : null}
+              <DialogFooter>
+                <Button type="submit" disabled={createGroupState === "loading"}>
+                  Create group
+                </Button>
+              </DialogFooter>
             </form>
           </Form>
         </DialogContent>

@@ -7,6 +7,18 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { toast } from "sonner";
 import { ConvexError } from "convex/values";
+import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
+import { Users } from "lucide-react";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "./ui/form";
+import { Input } from "./ui/input";
 
 const CreateGroupSchema = z.object({
   name: z.string().min(2, {
@@ -58,7 +70,45 @@ const NewGroup = () => {
       );
     }
   };
-  return <div className="">NewGroup</div>;
+  return (
+    <div>
+      <Dialog
+        open={createGroupModal}
+        onOpenChange={() => setCreateGroupModal(!createGroupModal)}
+      >
+        <DialogTrigger className="w-full">
+          <Users size={20} className="cursor-pointer" />
+        </DialogTrigger>
+        <DialogContent>
+          <Form {...form}>
+            <form
+              className="space-y-8"
+              onSubmit={form.handleSubmit(createGroupHandler)}
+            >
+              <fieldset>
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Name</FormLabel>
+                      <FormControl>
+                        <Input placeholder="onboarding" {...field} />
+                      </FormControl>
+                      <FormDescription>
+                        This is the name of the group
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </fieldset>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
 };
 
 export default NewGroup;

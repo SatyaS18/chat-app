@@ -8,7 +8,7 @@ import { z } from "zod";
 import { toast } from "sonner";
 import { ConvexError } from "convex/values";
 import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
-import { Users } from "lucide-react";
+import { Users, X } from "lucide-react";
 import {
   Form,
   FormControl,
@@ -29,6 +29,7 @@ import {
 import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import { Button } from "./ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { Card } from "./ui/card";
 
 const CreateGroupSchema = z.object({
   name: z.string().min(2, {
@@ -163,6 +164,36 @@ const NewGroup = () => {
                   )}
                 />
               </fieldset>
+
+              {members.length ? (
+                <Card className="flex items-center gap-3 overflow-x-auto w-full h-24 p-2">
+                  {contacts
+                    ?.filter((contact) => members.includes(contact._id))
+                    .map((friend) => (
+                      <div
+                        key={friend._id}
+                        className="flex flex-col items-center gap-1"
+                      >
+                        <div className="relative">
+                          <Avatar className="h-8 w-8">
+                            <AvatarImage src={friend.imageUrl} />
+                            <AvatarFallback>
+                              {friend.username.slice(0, 2)}
+                            </AvatarFallback>
+                          </Avatar>
+                          <X
+                            onClick={() =>
+                              form.setValue("members", [
+                                ...members.filter((id) => id !== friend._id),
+                              ])
+                            }
+                            className="text-muted-foreground h-4 w-4 absolute bottom-8 left-7 bg-muted rounded-full cursor-pointer"
+                          />
+                        </div>
+                      </div>
+                    ))}
+                </Card>
+              ) : null}
             </form>
           </Form>
         </DialogContent>

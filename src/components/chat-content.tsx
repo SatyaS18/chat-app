@@ -3,6 +3,7 @@ import { Id } from "../../convex/_generated/dataModel";
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { useMutationHandler } from "@/hooks/use-mutation-handler";
+import { useUser } from "@clerk/clerk-react";
 
 const ChatContent: FC<{ chatId: Id<"conversations"> }> = ({ chatId }) => {
   const conversation = useQuery(api.conversation.get, { id: chatId });
@@ -49,7 +50,28 @@ const ChatContent: FC<{ chatId: Id<"conversations"> }> = ({ chatId }) => {
 
     return formatSeenBy(seenUsers);
   };
-  return <div className="">ChatContent</div>;
+
+  const { user } = useUser();
+
+  if (!conversation) return null;
+
+  const chatAvatar = conversation?.otherMember?.imageUrl || "";
+  const name = conversation?.isGroup
+    ? conversation?.name
+    : conversation?.otherMember?.username || "";
+  const status = conversation?.otherMember?.status || "";
+
+  return (
+    <div className="h-full flex">
+      <ChatHeader
+        chatAvatar={chatAvatar}
+        username={name!}
+        isGroup={conversation?.isGroup}
+        chatId={chatId}
+        status={status}
+      />
+    </div>
+  );
 };
 
 export default ChatContent;

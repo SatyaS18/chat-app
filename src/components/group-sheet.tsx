@@ -5,6 +5,11 @@ import { api } from "../../convex/_generated/api";
 import { Id } from "../../convex/_generated/dataModel";
 import { toast } from "sonner";
 import { ConvexError } from "convex/values";
+import { ScrollArea } from "./ui/scroll-area";
+import { Avatar, AvatarFallback } from "./ui/avatar";
+import { SheetTitle } from "./ui/sheet";
+import { Phone, Video } from "lucide-react";
+import { Separator } from "./ui/separator";
 
 type ActionButtonProps = {
   Icon: FC;
@@ -73,7 +78,19 @@ export const GroupSheet: FC<GroupSheetProps> = ({ groupName, chatId }) => {
     }
   };
 
-  return <div className="">GroupSheet</div>;
+  return (
+    <ScrollArea className="h-full">
+      <Avatar className="mx-auto h-20 w-20 mt-10">
+        <AvatarFallback>{groupName.slice(0, 2)}</AvatarFallback>
+      </Avatar>
+      <SheetTitle className="text-center mt-2 text-2xl">{groupName}</SheetTitle>
+      <div className="flex justify-center space-x-4 mt-5">
+        <ActionButton Icon={Video} label="Video" />
+        <ActionButton Icon={Phone} label="Call" />
+      </div>
+      <Separator className="my-5 border border-gray-100 dark:border-gray-800" />
+    </ScrollArea>
+  );
 };
 
 export default GroupSheet;

@@ -59,6 +59,20 @@ export const GroupSheet: FC<GroupSheetProps> = ({ groupName, chatId }) => {
     }
   };
 
+  const leaveGroupHandler = async () => {
+    try {
+      await leaveGroup({ conversationId: chatId });
+
+      toast.success("Left Group");
+      setLeaveConfirmationDialog(false);
+    } catch (error) {
+      console.log(error);
+      toast.error(
+        error instanceof ConvexError ? error.data : "An error occurred"
+      );
+    }
+  };
+
   return <div className="">GroupSheet</div>;
 };
 

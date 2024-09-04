@@ -8,7 +8,7 @@ import { ConvexError } from "convex/values";
 import { ScrollArea, ScrollBar } from "./ui/scroll-area";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { SheetTitle } from "./ui/sheet";
-import { Phone, Trash2, Video } from "lucide-react";
+import { LogOut, Phone, Trash2, Video } from "lucide-react";
 import { Separator } from "./ui/separator";
 import { ChatTypeContent } from "./chat-type-content";
 import {
@@ -180,6 +180,49 @@ export const GroupSheet: FC<GroupSheetProps> = ({ groupName, chatId }) => {
               onClick={deleteGroupHandler}
             >
               Delete
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      <Separator className="my-5 border border-gray-100 dark:border-gray-800" />
+
+      <Dialog
+        open={leaveConfirmationDialog}
+        onOpenChange={() =>
+          setLeaveConfirmationDialog(!leaveConfirmationDialog)
+        }
+      >
+        <DialogTrigger
+          onClick={() => setLeaveConfirmationDialog(true)}
+          className="w-full"
+        >
+          <div className="flex items-center justify-center w-full text-red-600 space-x-3">
+            <LogOut />
+            <p>Leave Group</p>
+          </div>
+        </DialogTrigger>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="mb-5">
+              Are you absolutely sure you want to leave {groupName} group?
+            </DialogTitle>
+          </DialogHeader>
+
+          <div className="flex items-center space-x-3">
+            <Button
+              variant="link"
+              disabled={leaveGroupState === "loading"}
+              onClick={() => setLeaveConfirmationDialog(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              disabled={leaveGroupState === "loading"}
+              onClick={leaveGroupHandler}
+            >
+              Leave
             </Button>
           </div>
         </DialogContent>

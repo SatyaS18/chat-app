@@ -18,6 +18,9 @@ import {
   DialogTrigger,
 } from "./ui/dialog";
 import { Button } from "./ui/button";
+import { ChatTypeContent } from "./chat-type-content";
+import { pluralize } from "@/lib/utils";
+import Link from "next/link";
 
 type ActionButtonProps = {
   Icon: FC;
@@ -160,6 +163,31 @@ export const ProfileSheet: FC<ProfileSheetProps> = ({
       </div>
 
       <Separator className="my-5 border border-gray-100 dark:border-gray-800" />
+
+      <div className="flex flex-col gap-y-2">
+        <p className="font-bold text-lg">
+          {groupsInCommon?.length || 0}{" "}
+          {pluralize("group", groupsInCommon?.length || 0)} in common
+        </p>
+
+        <div>
+          {groupsInCommon?.length &&
+            groupsInCommon.map(({ conversation }) => (
+              <Link
+                href={`/chats/${conversation._id}`}
+                key={conversation._id}
+                className="flex items-center space-x-3 hover:bg-gray-400 px-3 py-2 rounded-md"
+              >
+                <Avatar>
+                  <AvatarFallback>
+                    {conversation?.name?.slice(0, 2) || "G"}
+                  </AvatarFallback>
+                </Avatar>
+                <p>{conversation.name}</p>
+              </Link>
+            ))}
+        </div>
+      </div>
     </ScrollArea>
   );
 };

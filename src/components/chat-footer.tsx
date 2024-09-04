@@ -177,6 +177,41 @@ export const ChatFooter: FC<ChatFooterProps> = ({ chatId, currentUserId }) => {
     }
   };
 
+  const addAudioElement = async (blob: Blob) => {
+    try {
+      const uniqueId = uuid();
+
+      const file = new File([blob], "adio.webm", { type: blob.type });
+      const fileName = `chat/audio-${uniqueId}`;
+
+      const { data, error } = await supabase.storage
+        .from("chat-files")
+        .upload(fileName, file, {
+          cacheControl: "3600",
+          upsert: false,
+        });
+
+      if (error) {
+        console.log("Error uploading audio: ", error);
+        toast.error("Failed to upload audio, please try again");
+        return;
+      }
+
+      const {
+        data: { publicUrl },
+      } = await supabase.storage.from("chat-files").getPublicUrl(data.path);
+
+      await createMessage({
+        conversationId: chatId,
+        type: "audio",
+        content: [publicUrl],
+      });
+    } catch (error) {
+      console.error("Failed to upload audio", error);
+      toast.error("Failed to upload audio, please try again");
+    }
+  };
+
   return (
     <Form {...form}>
       <form

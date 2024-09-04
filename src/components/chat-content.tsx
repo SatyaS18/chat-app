@@ -5,6 +5,7 @@ import { api } from "../../convex/_generated/api";
 import { useMutationHandler } from "@/hooks/use-mutation-handler";
 import { useUser } from "@clerk/clerk-react";
 import ChatHeader from "./chat-header";
+import MessageItem from "./message-item";
 
 const ChatContent: FC<{ chatId: Id<"conversations"> }> = ({ chatId }) => {
   const conversation = useQuery(api.conversation.get, { id: chatId });
@@ -71,6 +72,24 @@ const ChatContent: FC<{ chatId: Id<"conversations"> }> = ({ chatId }) => {
         chatId={chatId}
         status={status}
       />
+
+      <div className="p-3 flex flex-1 flex-col-reverse gap-2">
+        {messages?.map((message, index) => (
+          <MessageItem
+            key={message._id}
+            content={message.content}
+            createdAt={message._creationTime}
+            lastByUser={messages[index - 1]?.senderId === message.senderId}
+            fromCurrentUser={message.isCurrentUser}
+            senderImage={message.senderImage}
+            senderName={message.senderName}
+            type={message.type}
+            seen={
+              message.isCurrentUser ? getSeenMessage(message._id) : undefined
+            }
+          />
+        ))}
+      </div>
     </div>
   );
 };

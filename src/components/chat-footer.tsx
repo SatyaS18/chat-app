@@ -2,11 +2,14 @@ import { useIsDesktop } from "@/hooks/use-is-desktop";
 import { useMutationHandler } from "@/hooks/use-mutation-handler";
 import { useSidebarWidth } from "@/hooks/use-sidebar-width";
 import { useTheme } from "next-themes";
-import { FC, useEffect, useState } from "react";
+import { ChangeEvent, FC, useEffect, useState } from "react";
 import { z } from "zod";
 import { api } from "../../convex/_generated/api";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "sonner";
+import { ConvexError } from "convex/values";
+import axios from "axios";
 
 const ChatMessageSchema = z.object({
   content: z.string().min(1, {
@@ -73,6 +76,31 @@ export const ChatFooter: FC<ChatFooterProps> = ({ chatId, currentUserId }) => {
       );
     }
   };
+
+  const handleInputChange = async (e: ChangeEvent<HTMLTextAreaElement>) => {
+    const { value, selectionStart } = e.target;
+
+    if (selectionStart !== null) form.setValue("content", value);
+
+    if (!typing) {
+      setTyping(true);
+      await axios.post("/api/type-indicator", {
+        channel: chatId,
+        event: "typing",
+        data: { isTyping: true, userId: currentUserId },
+      });
+
+      setTimeout(() => {
+        setTyping(false);
+        axios.post("/api/type-indicator", {
+          channel: chatId,
+          event: "typing",
+          data: { isTyping: false, userId: currentUserId },
+        });
+      }, 2000);
+    }
+  };
+
   return <div className="">ChatFooter</div>;
 };
 

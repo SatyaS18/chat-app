@@ -8,8 +8,16 @@ import { Id } from "../../convex/_generated/dataModel";
 import { ScrollArea } from "./ui/scroll-area";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { SheetTitle } from "./ui/sheet";
-import { Phone, Video } from "lucide-react";
+import { Ban, Phone, Video } from "lucide-react";
 import { Separator } from "./ui/separator";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "./ui/dialog";
+import { Button } from "./ui/button";
 
 type ActionButtonProps = {
   Icon: FC;
@@ -87,6 +95,49 @@ export const ProfileSheet: FC<ProfileSheetProps> = ({
         <ActionButton Icon={Video} label="Video" />
         <ActionButton Icon={Phone} label="Call" />
       </div>
+
+      <Separator className="my-5 border border-gray-100 dark:border-gray-800" />
+
+      <Dialog
+        open={blockConfirmationDialog}
+        onOpenChange={() =>
+          setBlockConfirmationDialog(!blockConfirmationDialog)
+        }
+      >
+        <DialogTrigger
+          className="w-full"
+          onClick={() => setBlockConfirmationDialog(true)}
+        >
+          <div className="flex items-center justify-center w-full text-red-600 space-x-3">
+            <Ban />
+            <p>Block</p>
+          </div>
+        </DialogTrigger>
+
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="mb-5">
+              Are you absolutely sure you want to block {username}?
+            </DialogTitle>
+          </DialogHeader>
+          <div className="flex items-center space-x-3">
+            <Button
+              onClick={() => setBlockConfirmationDialog(false)}
+              variant="link"
+              disabled={blockContactState === "loading"}
+            >
+              Cancel
+            </Button>
+            <Button
+              disabled={blockContactState === "loading"}
+              variant="destructive"
+              onClick={blockContactHandler}
+            >
+              Block
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       <Separator className="my-5 border border-gray-100 dark:border-gray-800" />
     </ScrollArea>

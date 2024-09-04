@@ -5,7 +5,7 @@ import { useMutationHandler } from "@/hooks/use-mutation-handler";
 import { toast } from "sonner";
 import { ConvexError } from "convex/values";
 import { Id } from "../../convex/_generated/dataModel";
-import { ScrollArea } from "./ui/scroll-area";
+import { ScrollArea, ScrollBar } from "./ui/scroll-area";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { SheetTitle } from "./ui/sheet";
 import { Ban, Phone, Video } from "lucide-react";
@@ -138,6 +138,26 @@ export const ProfileSheet: FC<ProfileSheetProps> = ({
           </div>
         </DialogContent>
       </Dialog>
+
+      <Separator className="my-5 border border-gray-100 dark:border-gray-800" />
+
+      <div>
+        <p className="font-bold text-lg my-5">Shared Media</p>
+        {chatFiles?.length ? (
+          <ScrollArea className="rounded-md border max-w-80">
+            <div className="flex space-x-4 p-4">
+              {chatFiles.map(({ _id, type, content }) => (
+                <div key={_id} className="w-[200px] rounded-xl overflow-hidden">
+                  <ChatTypeContent type={type} content={content} />
+                </div>
+              ))}
+            </div>
+            <ScrollBar orientation="horizontal" />
+          </ScrollArea>
+        ) : (
+          <p>No media shared</p>
+        )}
+      </div>
 
       <Separator className="my-5 border border-gray-100 dark:border-gray-800" />
     </ScrollArea>

@@ -90,6 +90,8 @@ const ChatContent: FC<{ chatId: Id<"conversations"> }> = ({ chatId }) => {
           />
         ))}
       </div>
+
+      <ChatFooter chatId={chatId} currentUserId={user?.id!} />
     </div>
   );
 };

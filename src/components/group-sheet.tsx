@@ -1,4 +1,10 @@
-import { FC } from "react";
+import { useMutationHandler } from "@/hooks/use-mutation-handler";
+import { useQuery } from "convex/react";
+import { FC, useState } from "react";
+import { api } from "../../convex/_generated/api";
+import { Id } from "../../convex/_generated/dataModel";
+import { toast } from "sonner";
+import { ConvexError } from "convex/values";
 
 type ActionButtonProps = {
   Icon: FC;
@@ -18,6 +24,41 @@ type GroupSheetProps = {
 };
 
 export const GroupSheet: FC<GroupSheetProps> = ({ groupName, chatId }) => {
+  const [deleteConfirmationDialog, setDeleteConfirmationDialog] =
+    useState(false);
+  const [leaveConfirmationDialog, setLeaveConfirmationDialog] = useState(false);
+
+  const { mutate: leaveGroup, state: leaveGroupState } = useMutationHandler(
+    api.conversation.leaveGroup
+  );
+  const { mutate: blockGroup, state: blockGroupState } = useMutationHandler(
+    api.conversation.deleteGroup
+  );
+
+  const groupMembers = useQuery(api.conversation.getConversationMembers, {
+    conversationId: chatId as Id<"conversations">,
+  });
+
+  const messages = useQuery(api.messages.get, {
+    id: chatId as Id<"conversations">,
+  });
+
+  const chatFiles = messages?.filter(({ type }) => type !== "text");
+
+  const deleteGroupHandler = async () => {
+    try {
+      await blockGroup({ conversationId: chatId });
+
+      toast.success("Group Deleted");
+      setDeleteConfirmationDialog(false);
+    } catch (error) {
+      console.log(error);
+      toast.error(
+        error instanceof ConvexError ? error.data : "An error occurred"
+      );
+    }
+  };
+
   return <div className="">GroupSheet</div>;
 };
 

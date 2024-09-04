@@ -1,4 +1,10 @@
-import { FC } from "react";
+import { useQuery } from "convex/react";
+import { FC, useState } from "react";
+import { api } from "../../convex/_generated/api";
+import { useMutationHandler } from "@/hooks/use-mutation-handler";
+import { toast } from "sonner";
+import { ConvexError } from "convex/values";
+import { Id } from "../../convex/_generated/dataModel";
 
 type ActionButtonProps = {
   Icon: FC;
@@ -37,6 +43,31 @@ export const ProfileSheet: FC<ProfileSheetProps> = ({
   status,
   username,
 }) => {
+  const [blockConfirmationDialog, setBlockConfirmationDialog] = useState(false);
+
+  const messages = useQuery(api.messages.get, {
+    id: chatId as Id<"conversations">,
+  });
+
+  const { mutate: blockContact, state: blockContactState } = useMutationHandler(
+    api.contact.block
+  );
+
+  const blockContactHandler = async () => {
+    try {
+      await blockContact({ conversationId: chatId });
+
+      toast.success("Contact blocked");
+    } catch (error) {
+      console.log(error);
+      toast.error(
+        error instanceof ConvexError ? error.data : "An error occurred"
+      );
+    }
+  };
+
+  const chatFiles = messages?.filter(({ type }) => type !== "text");
+
   return <div className="">ProfileSheet</div>;
 };
 

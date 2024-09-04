@@ -5,11 +5,12 @@ import { api } from "../../convex/_generated/api";
 import { Id } from "../../convex/_generated/dataModel";
 import { toast } from "sonner";
 import { ConvexError } from "convex/values";
-import { ScrollArea } from "./ui/scroll-area";
+import { ScrollArea, ScrollBar } from "./ui/scroll-area";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { SheetTitle } from "./ui/sheet";
 import { Phone, Video } from "lucide-react";
 import { Separator } from "./ui/separator";
+import { ChatTypeContent } from "./chat-type-content";
 
 type ActionButtonProps = {
   Icon: FC;
@@ -110,6 +111,26 @@ export const GroupSheet: FC<GroupSheetProps> = ({ groupName, chatId }) => {
               </div>
             </div>
           ))}
+      </div>
+
+      <Separator className="my-5 border border-gray-100 dark:border-gray-800" />
+
+      <div className="my-5">
+        <p className="font-bold text-lg my-5">Shared Media</p>
+        {chatFiles?.length ? (
+          <ScrollArea className="rounded-md border max-w-80">
+            <div className="flex space-x-4 p-4">
+              {chatFiles.map(({ _id, type, content }) => (
+                <div key={_id} className="w-[200px] rounded-xl overflow-hidden">
+                  <ChatTypeContent type={type} content={content} />
+                </div>
+              ))}
+            </div>
+            <ScrollBar orientation="horizontal" />
+          </ScrollArea>
+        ) : (
+          <p>No media shared</p>
+        )}
       </div>
 
       <Separator className="my-5 border border-gray-100 dark:border-gray-800" />

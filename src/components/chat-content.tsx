@@ -4,6 +4,7 @@ import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { useMutationHandler } from "@/hooks/use-mutation-handler";
 import { useUser } from "@clerk/clerk-react";
+import ChatHeader from "./chat-header";
 
 const ChatContent: FC<{ chatId: Id<"conversations"> }> = ({ chatId }) => {
   const conversation = useQuery(api.conversation.get, { id: chatId });

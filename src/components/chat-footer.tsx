@@ -10,11 +10,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { ConvexError } from "convex/values";
 import axios from "axios";
-import { Form } from "./ui/form";
+import { Form, FormControl, FormField } from "./ui/form";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
-import { Smile } from "lucide-react";
+import { Send, Smile } from "lucide-react";
 import Picker from "@emoji-mart/react";
 import data from "@emoji-mart/data";
+import TextareaAutoSize from "react-textarea-autosize";
 
 const ChatMessageSchema = z.object({
   content: z.string().min(1, {
@@ -132,6 +133,38 @@ export const ChatFooter: FC<ChatFooterProps> = ({ chatId, currentUserId }) => {
             />
           </PopoverContent>
         </Popover>
+
+        <FormField
+          control={form.control}
+          name="content"
+          render={({ field }) => (
+            <FormControl>
+              <>
+                <TextareaAutoSize
+                  onKeyDown={async (e) => {
+                    if (e.key === "Enter" && !e.shiftKey) {
+                      e.preventDefault();
+                      await form.handleSubmit(createMessagehandler)();
+                    }
+                  }}
+                  rows={1}
+                  maxRows={2}
+                  {...field}
+                  disabled={createMessageState === "loading"}
+                  placeholder="Type a message"
+                  onChange={handleInputChange}
+                  className="flex-grow bg-gray-200 dark:bg-gray-600 rounded-2xl resize-none px-4 p-2 ring-0 focus:ring-0 focus:outline-none outline-none"
+                />
+                {isTyping && <p className="text-xs ml-1">typing...</p>}
+              </>
+            </FormControl>
+          )}
+        />
+
+        <Send
+          className="cursor-pointer"
+          onClick={async () => form.handleSubmit(createMessagehandler)()}
+        />
       </form>
     </Form>
   );

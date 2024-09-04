@@ -6,7 +6,7 @@ import { Id } from "../../convex/_generated/dataModel";
 import { toast } from "sonner";
 import { ConvexError } from "convex/values";
 import { ScrollArea } from "./ui/scroll-area";
-import { Avatar, AvatarFallback } from "./ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { SheetTitle } from "./ui/sheet";
 import { Phone, Video } from "lucide-react";
 import { Separator } from "./ui/separator";
@@ -88,6 +88,30 @@ export const GroupSheet: FC<GroupSheetProps> = ({ groupName, chatId }) => {
         <ActionButton Icon={Video} label="Video" />
         <ActionButton Icon={Phone} label="Call" />
       </div>
+      <Separator className="my-5 border border-gray-100 dark:border-gray-800" />
+
+      <p className="font-bold text-lg">
+        {groupMembers?.members.length} members
+      </p>
+
+      <div>
+        {groupMembers?.members &&
+          groupMembers.members.map((member) => (
+            <div
+              className="flex items-center justify-between space-x-3 my-3"
+              key={member._id}
+            >
+              <div className="flex items-center space-x-3">
+                <Avatar>
+                  <AvatarImage src={member.imageUrl} />
+                  <AvatarFallback>{member.username[0]}</AvatarFallback>
+                </Avatar>
+                <p>{member.username}</p>
+              </div>
+            </div>
+          ))}
+      </div>
+
       <Separator className="my-5 border border-gray-100 dark:border-gray-800" />
     </ScrollArea>
   );

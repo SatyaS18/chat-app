@@ -3,6 +3,7 @@ import { format } from "date-fns";
 import Image from "next/image";
 import Link from "next/link";
 import { FC, ReactNode } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 type MessageItemProps = {
   fromCurrentUser: boolean;
@@ -87,8 +88,30 @@ export const MessageItem: FC<MessageItemProps> = ({
               <p className="underline">PDF Document</p>
             </Link>
           )}
+
+          <p
+            className={cn("text-xs flex w-full my-1", {
+              "text-primary-foreground justify-end": fromCurrentUser,
+              "text-secondary-foreground justify-start": !fromCurrentUser,
+              "dark:text-white text-black":
+                type === "audio" || type === "image" || type === "pdf",
+            })}
+          >
+            {formatTime(createdAt)}
+          </p>
         </div>
+        <span className="text-sm italic">{seen}</span>
       </div>
+      <Avatar
+        className={cn("w-8 h-8 relative", {
+          "order-2": fromCurrentUser,
+          "order-1": !fromCurrentUser,
+          invisible: lastByUser,
+        })}
+      >
+        <AvatarImage src={senderImage} alt={senderName} />
+        <AvatarFallback>{senderName.slice(0, 2)}</AvatarFallback>
+      </Avatar>
     </div>
   );
 };

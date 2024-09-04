@@ -1,9 +1,16 @@
+"use client";
 import { useIsDesktop } from "@/hooks/use-is-desktop";
 import { useSidebarWidth } from "@/hooks/use-sidebar-width";
 import { useQuery } from "convex/react";
 import { useRouter } from "next/navigation";
 import { FC } from "react";
 import { api } from "../../convex/_generated/api";
+import { Button } from "./ui/button";
+import Link from "next/link";
+import { ChevronLeft } from "lucide-react";
+import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { cn } from "@/lib/utils";
 
 type ChatHeaderProps = {
   chatAvatar: string;
@@ -30,7 +37,52 @@ export const ChatHeader: FC<ChatHeaderProps> = ({
   );
 
   const videoCall = () => router.push(`/calls/${chatId}`);
-  return <div className="">ChatHeader</div>;
+
+  return (
+    <div
+      className={cn(
+        "fixed bg-white dark:bg-gray-800 px-3 md:pr-10 flex items-center justify-between space-x-3 z-30 top-0 w-full h-20"
+      )}
+      style={isDesktop ? { width: `calc(100% - ${sidebarWidth + 3}%)` } : {}}
+    >
+      <div className="flex space-x-3">
+        <div className="md:hidden">
+          <Button asChild variant="outline" size="icon">
+            <Link href="/chats">
+              <ChevronLeft />
+            </Link>
+          </Button>
+        </div>
+        <Sheet>
+          <SheetTrigger className="flex items-center cursor-pointer space-x-4">
+            <Avatar>
+              <AvatarImage src={chatAvatar} />
+              <AvatarFallback>{username[0]}</AvatarFallback>
+            </Avatar>
+            <h2 className="font-bold text-lg">{username}</h2>
+          </SheetTrigger>
+          <SheetContent className="bg-white dark:bg-black dark:text-white w-80 md:w-96">
+            {isGroup ? (
+              <GroupSheet chatId={chatId} groupName={username} />
+            ) : (
+              <ProfileSheet
+                username={username}
+                status={status}
+                chatId={chatId}
+                groupsInCommon={groupsInCommon}
+                chatAvatar={chatAvatar}
+              />
+            )}
+          </SheetContent>
+        </Sheet>
+      </div>
+
+      <div className="flex items-center space-x-4">
+        <Video className="cursor-pointer" onClick={videoCall} />
+        <Phone className="cursor-pointer" onClick={videoCall} />
+      </div>
+    </div>
+  );
 };
 
 export default ChatHeader;

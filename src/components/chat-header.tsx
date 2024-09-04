@@ -11,6 +11,8 @@ import { ChevronLeft } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { cn } from "@/lib/utils";
+import ProfileSheet from "./profile-sheet";
+import GroupSheet from "./group-sheet";
 
 type ChatHeaderProps = {
   chatAvatar: string;

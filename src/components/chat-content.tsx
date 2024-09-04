@@ -6,6 +6,7 @@ import { useMutationHandler } from "@/hooks/use-mutation-handler";
 import { useUser } from "@clerk/clerk-react";
 import ChatHeader from "./chat-header";
 import MessageItem from "./message-item";
+import ChatFooter from "./chat-footer";
 
 const ChatContent: FC<{ chatId: Id<"conversations"> }> = ({ chatId }) => {
   const conversation = useQuery(api.conversation.get, { id: chatId });

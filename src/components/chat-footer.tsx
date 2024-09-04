@@ -10,6 +10,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { ConvexError } from "convex/values";
 import axios from "axios";
+import { Form } from "./ui/form";
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+import { Smile } from "lucide-react";
+import Picker from "@emoji-mart/react";
+import data from "@emoji-mart/data";
 
 const ChatMessageSchema = z.object({
   content: z.string().min(1, {
@@ -101,7 +106,35 @@ export const ChatFooter: FC<ChatFooterProps> = ({ chatId, currentUserId }) => {
     }
   };
 
-  return <div className="">ChatFooter</div>;
+  return (
+    <Form {...form}>
+      <form
+        style={isDesktop ? { width: `calc(100% - ${sidebarWidth + 3}%)` } : {}}
+        className="fixed px-3 md:pr-10 flex items-center justify-between space-x-3 z-30 bottom-0 w-full bg-white dark:bg-gray-800 h-20"
+        onSubmit={form.handleSubmit(createMessagehandler)}
+      >
+        <Popover>
+          <PopoverTrigger>
+            <button type="button">
+              <Smile size={20} />
+            </button>
+          </PopoverTrigger>
+          <PopoverContent className="w-fit p-0">
+            <Picker
+              theme={resolvedTheme}
+              data={data}
+              onEmojiSelect={(emoji: any) =>
+                form.setValue(
+                  "content",
+                  `${form.getValues("content")}${emoji.native}`
+                )
+              }
+            />
+          </PopoverContent>
+        </Popover>
+      </form>
+    </Form>
+  );
 };
 
 export default ChatFooter;

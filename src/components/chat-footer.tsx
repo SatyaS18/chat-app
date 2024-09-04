@@ -34,6 +34,7 @@ import { Button } from "./ui/button";
 import { v4 as uuid } from "uuid";
 import Pusher from "pusher-js";
 import { supabaseBrowserClient as supabase } from "@/supabase/supabaseClient";
+import { AudioRecorder } from "react-audio-voice-recorder";
 
 const ChatMessageSchema = z.object({
   content: z.string().min(1, {
@@ -307,6 +308,17 @@ export const ChatFooter: FC<ChatFooterProps> = ({ chatId, currentUserId }) => {
             </DialogFooter>
           </DialogContent>
         </Dialog>
+
+        {isDesktop && (
+          <AudioRecorder
+            onRecordingComplete={addAudioElement}
+            audioTrackConstraints={{
+              noiseSuppression: true,
+              echoCancellation: true,
+            }}
+            downloadFileExtension="webm"
+          />
+        )}
       </form>
     </Form>
   );

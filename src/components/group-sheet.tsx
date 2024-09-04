@@ -8,9 +8,17 @@ import { ConvexError } from "convex/values";
 import { ScrollArea, ScrollBar } from "./ui/scroll-area";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { SheetTitle } from "./ui/sheet";
-import { Phone, Video } from "lucide-react";
+import { Phone, Trash2, Video } from "lucide-react";
 import { Separator } from "./ui/separator";
 import { ChatTypeContent } from "./chat-type-content";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "./ui/dialog";
+import { Button } from "./ui/button";
 
 type ActionButtonProps = {
   Icon: FC;
@@ -132,6 +140,50 @@ export const GroupSheet: FC<GroupSheetProps> = ({ groupName, chatId }) => {
           <p>No media shared</p>
         )}
       </div>
+
+      <Separator className="my-5 border border-gray-100 dark:border-gray-800" />
+
+      <Dialog
+        open={deleteConfirmationDialog}
+        onOpenChange={() =>
+          setDeleteConfirmationDialog(!deleteConfirmationDialog)
+        }
+      >
+        <DialogTrigger
+          onClick={() => setDeleteConfirmationDialog(true)}
+          className="w-full"
+        >
+          <div className="flex items-center justify-center w-full text-red-600 space-x-3">
+            <Trash2 />
+            <p>Delete Group</p>
+          </div>
+        </DialogTrigger>
+
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="mb-5">
+              Are you absolutely sure you want to delete {groupName} group?
+            </DialogTitle>
+          </DialogHeader>
+
+          <div className="flex items-center space-x-3">
+            <Button
+              variant="link"
+              disabled={blockGroupState === "loading"}
+              onClick={() => setDeleteConfirmationDialog(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              disabled={blockGroupState === "loading"}
+              onClick={deleteGroupHandler}
+            >
+              Delete
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       <Separator className="my-5 border border-gray-100 dark:border-gray-800" />
     </ScrollArea>
